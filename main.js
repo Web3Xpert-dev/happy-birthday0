@@ -13,7 +13,7 @@ window.addEventListener("resize", resize);
 const face = new Image();
 face.src = "images/face.jpeg";
 
-/* ================= LOAD 1–25 PHOTOS ================= */
+/* ================= LOAD PHOTOS ================= */
 const photos = [];
 for (let i = 1; i <= 25; i++) {
   const img = new Image();
@@ -24,15 +24,9 @@ for (let i = 1; i <= 25; i++) {
 /* ================= STATE ================= */
 let particles = [];
 let started = false;
-let faceReady = false;
 let LIMIT = window.innerWidth < 768 ? 900 : 1600;
 
-/* ================= FACE READY ================= */
-face.onload = () => {
-  faceReady = true;
-};
-
-/* ================= SIMPLE TREE ================= */
+/* ================= TREE ================= */
 function drawTree() {
   ctx.strokeStyle = "#5b3a29";
   ctx.lineWidth = 3;
@@ -44,10 +38,9 @@ function drawTree() {
 
 /* ================= BUILD FACE ================= */
 function buildFace() {
-  if (!faceReady) return;
-
   const fw = face.width;
   const fh = face.height;
+  if (!fw || !fh) return;
 
   const scale = Math.min(
     (canvas.width / fw) * 0.6,
@@ -65,7 +58,14 @@ function buildFace() {
   const tctx = temp.getContext("2d");
   tctx.drawImage(face, 0, 0, w, h);
 
-  const data = tctx.getImageData(0, 0, w, h).data;
+  let data;
+  try {
+    data = tctx.getImageData(0, 0, w, h).data;
+  } catch (e) {
+    console.error("ImageData error", e);
+    return;
+  }
+
   particles = [];
 
   for (let y = 0; y < h; y += 6) {
@@ -85,7 +85,7 @@ function buildFace() {
   }
 }
 
-/* ================= ANIMATION ================= */
+/* ================= ANIMATE ================= */
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawTree();
@@ -100,13 +100,20 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-/* ================= START ================= */
+/* ================= AUTO START ================= */
 function start() {
-  if (started || !faceReady) return;
+  if (started) return;
   started = true;
   buildFace();
   animate();
 }
 
-window.addEventListener("click", start);
-window.addEventListener("touchstart", start);
+/* Start when face loads */
+face.onload = () => {
+  start();
+};
+
+/* Fallback (GitHub slow load fix) */
+setTimeout(() => {
+  if (!started) start();
+}, 2000);
