@@ -1,20 +1,22 @@
-html,body{
-  margin:0;
-  padding:0;
-  background:#0b0b1a;
-  overflow:hidden;
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0b0b1a;
+  overflow: hidden;
 }
 
-canvas{
-  display:block;
+canvas {
+  display: block;
 }
 
-.hint{
-  position:fixed;
-  bottom:12px;
-  width:100%;
-  text-align:center;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  opacity:.7;
+.hint {
+  position: fixed;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  opacity: 0.7;
+  pointer-events: none;
 }
