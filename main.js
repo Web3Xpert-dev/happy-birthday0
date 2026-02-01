@@ -15,12 +15,9 @@ face.src = "images/face.jpeg";
 
 /* ================= LOAD 1–25 PHOTOS ================= */
 const photos = [];
-let photosLoaded = 0;
-
 for (let i = 1; i <= 25; i++) {
   const img = new Image();
   img.src = `images/${i}.jpeg`;
-  img.onload = () => photosLoaded++;
   photos.push(img);
 }
 
@@ -47,7 +44,7 @@ function drawTree() {
 
 /* ================= BUILD FACE ================= */
 function buildFace() {
-  if (!faceReady || photosLoaded < 25) return;
+  if (!faceReady) return;
 
   const fw = face.width;
   const fh = face.height;
@@ -105,7 +102,7 @@ function animate() {
 
 /* ================= START ================= */
 function start() {
-  if (started || !faceReady || photosLoaded < 25) return;
+  if (started || !faceReady) return;
   started = true;
   buildFace();
   animate();
